@@ -60,7 +60,7 @@ Ask: "Alguma fonte deve ser removida ou adicionada? (ok / remover: id / adiciona
 
 ## Step 6: Write sources.md
 
-Write to `aulas/<slug>/sources.md` following `templates/sources.template.md`.
+Write to `aulas/<slug>/sources.md` following `.super-professor/templates/sources.template.md`.
 Include the full citation block at the bottom, formatted per citation_style.
 
 ## GUARDRAILS

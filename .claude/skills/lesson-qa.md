@@ -17,7 +17,7 @@ Determine the artefact type from the filename:
 - `lesson-plan.md` → type: plan → rules: QC-U1–5, QC-P1–7
 - `slides-blueprint.md` → type: blueprint → rules: QC-U1–5, QC-BL1–10
 
-Read `docs/qa/quality-contracts.md` to get the full rule definitions.
+Read `.super-professor/docs/qa/quality-contracts.md` to get the full rule definitions.
 
 ## Step 1: Announce pre-execution contracts (when called before a skill runs)
 

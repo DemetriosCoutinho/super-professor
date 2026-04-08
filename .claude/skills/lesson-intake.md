@@ -79,5 +79,5 @@ Only write the file after explicit "sim".
 ## Output
 
 Create directory `aulas/<slug>/` if it doesn't exist.
-Write to `aulas/<slug>/briefing.md` using the template at `templates/briefing.template.md`, filling all fields.
+Write to `aulas/<slug>/briefing.md` using the template at `.super-professor/templates/briefing.template.md`, filling all fields.
 Set `status: closed` in frontmatter.

@@ -57,6 +57,6 @@ Ask: "Esta classificação está correta? (sim / ajustar: arquivo=relevância)"
 
 ## Output
 
-Write to `aulas/<slug>/corpus-inventory.md` following the template at `templates/corpus-inventory.template.md`.
+Write to `aulas/<slug>/corpus-inventory.md` following the template at `.super-professor/templates/corpus-inventory.template.md`.
 
 The `gaps_summary` field must list every topic needed for the lesson that was not found in any repository file. If no gaps: write "Nenhuma lacuna identificada."

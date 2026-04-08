@@ -73,5 +73,5 @@ Only continue to remaining slides after "sim" to the sample.
 
 ## Output
 
-Write to `aulas/<slug>/slides-blueprint.md` following `templates/slides-blueprint.template.md`.
+Write to `aulas/<slug>/slides-blueprint.md` following `.super-professor/templates/slides-blueprint.template.md`.
 Set `total_slides` = actual number of slides generated.
