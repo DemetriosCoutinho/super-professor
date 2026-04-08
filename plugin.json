@@ -1,0 +1,67 @@
+{
+  "name": "super-professor",
+  "version": "0.1.0",
+  "description": "Plugin for creating modern, pedagogically rigorous lessons from academic repository materials",
+  "author": "Demetrios",
+  "license": "MIT",
+  "skills": [
+    {
+      "name": "super-professor",
+      "file": "skills/super-professor.md",
+      "description": "Full lesson creation pipeline with interactive planning and checkpoints"
+    },
+    {
+      "name": "lesson-repo-setup",
+      "file": "skills/lesson-repo-setup.md",
+      "description": "Analyze or initialize academic repository structure"
+    },
+    {
+      "name": "lesson-intake",
+      "file": "skills/lesson-intake.md",
+      "description": "Interactive lesson briefing session"
+    },
+    {
+      "name": "lesson-corpus",
+      "file": "skills/lesson-corpus.md",
+      "description": "Audit repository materials against the lesson brief"
+    },
+    {
+      "name": "lesson-research",
+      "file": "skills/lesson-research.md",
+      "description": "Search and validate high-quality external sources"
+    },
+    {
+      "name": "lesson-plan",
+      "file": "skills/lesson-plan.md",
+      "description": "Create time-bounded lesson plan with source traceability"
+    },
+    {
+      "name": "lesson-blueprint",
+      "file": "skills/lesson-blueprint.md",
+      "description": "Generate detailed slide-by-slide blueprint for HTML rendering"
+    },
+    {
+      "name": "lesson-qa",
+      "file": "skills/lesson-qa.md",
+      "description": "Validate any pipeline artefact against quality contracts"
+    }
+  ],
+  "agents": [
+    {
+      "name": "corpus-reader",
+      "file": "agents/corpus-reader.md"
+    },
+    {
+      "name": "research-scout",
+      "file": "agents/research-scout.md"
+    },
+    {
+      "name": "qa-validator",
+      "file": "agents/qa-validator.md"
+    },
+    {
+      "name": "citation-formatter",
+      "file": "agents/citation-formatter.md"
+    }
+  ]
+}
