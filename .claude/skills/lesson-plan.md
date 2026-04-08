@@ -8,7 +8,7 @@ You are building the lesson plan from the closed briefing, corpus inventory, and
 
 ## BEFORE STARTING
 
-1. Read `aulas/<slug>/briefing.md` (must have `status: closed`)
+1. Read `aulas/<slug>/briefing.md`. If `status` is not `closed`: stop and say "O briefing ainda não foi fechado. Execute `/lesson-intake` primeiro."
 2. Read `aulas/<slug>/corpus-inventory.md`
 3. Read `aulas/<slug>/sources.md`
 

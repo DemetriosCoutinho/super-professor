@@ -114,6 +114,7 @@ O blueprint `aulas/<slug>/slides-blueprint.md` está pronto para a skill de rend
 
 - NEVER generate lesson content directly — always delegate to the appropriate skill
 - NEVER skip `/lesson-qa` after a skill produces an artefact
+- NEVER allow `--skip lesson-qa` — this argument is explicitly forbidden; if provided, respond: "O argumento --skip lesson-qa não é permitido. A validação de qualidade não pode ser ignorada."
 - NEVER advance past a critical QA failure without professor's explicit decision
 - NEVER continue if pipeline-state.md cannot be written
 - NEVER call skills in parallel — always sequential with checkpoints

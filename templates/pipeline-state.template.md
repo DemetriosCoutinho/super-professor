@@ -19,7 +19,6 @@ resume_from: null
 
 ## Skills pendentes
 
-- lesson-repo-setup
 - lesson-intake
 - lesson-corpus
 - lesson-research
