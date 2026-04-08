@@ -1,0 +1,25 @@
+# super-professor
+
+Plugin para criação de aulas modernas e pedagogicamente rigorosas a partir de materiais de repositórios acadêmicos.
+
+## Skills disponíveis
+
+| Skill | Descrição | Pré-requisito |
+|-------|-----------|---------------|
+| /lesson-repo-setup | Analisa ou inicializa o repositório | Nenhum — sempre primeiro |
+| /lesson-intake | Fecha o briefing da aula | repo-manifest.md |
+| /lesson-corpus | Audita materiais do repositório | briefing.md |
+| /lesson-research | Pesquisa fontes externas | corpus-inventory.md |
+| /lesson-plan | Cria plano de aula | sources.md |
+| /lesson-blueprint | Gera blueprint de slides | lesson-plan.md |
+| /lesson-qa | Valida qualquer artefato | artefato-alvo |
+| /super-professor | Pipeline completo com checkpoints | repo-manifest.md |
+
+## Padrão de citação
+ABNT NBR 6023 (padrão) | APA 7ª edição (configurável em `repo-manifest.md`)
+
+## Princípios
+- Toda afirmação de conteúdo rastreia a uma fonte
+- Nenhum slide sem função pedagógica declarada para a mídia
+- `pipeline-state.md` escrito ANTES de cada skill rodar
+- QA obrigatório após cada skill — sem override silencioso
