@@ -4,64 +4,65 @@
   "description": "Plugin for creating modern, pedagogically rigorous lessons from academic repository materials",
   "author": "Demetrios",
   "license": "MIT",
+  "notes": "Phase 1 local prototype. When packaging for distribution (Phase 5), move skill files from .claude/skills/ to skills/ and update these paths.",
   "skills": [
     {
       "name": "super-professor",
-      "file": "skills/super-professor.md",
+      "file": ".claude/skills/super-professor.md",
       "description": "Full lesson creation pipeline with interactive planning and checkpoints"
     },
     {
       "name": "lesson-repo-setup",
-      "file": "skills/lesson-repo-setup.md",
+      "file": ".claude/skills/lesson-repo-setup.md",
       "description": "Analyze or initialize academic repository structure"
     },
     {
       "name": "lesson-intake",
-      "file": "skills/lesson-intake.md",
+      "file": ".claude/skills/lesson-intake.md",
       "description": "Interactive lesson briefing session"
     },
     {
       "name": "lesson-corpus",
-      "file": "skills/lesson-corpus.md",
+      "file": ".claude/skills/lesson-corpus.md",
       "description": "Audit repository materials against the lesson brief"
     },
     {
       "name": "lesson-research",
-      "file": "skills/lesson-research.md",
+      "file": ".claude/skills/lesson-research.md",
       "description": "Search and validate high-quality external sources"
     },
     {
       "name": "lesson-plan",
-      "file": "skills/lesson-plan.md",
+      "file": ".claude/skills/lesson-plan.md",
       "description": "Create time-bounded lesson plan with source traceability"
     },
     {
       "name": "lesson-blueprint",
-      "file": "skills/lesson-blueprint.md",
+      "file": ".claude/skills/lesson-blueprint.md",
       "description": "Generate detailed slide-by-slide blueprint for HTML rendering"
     },
     {
       "name": "lesson-qa",
-      "file": "skills/lesson-qa.md",
+      "file": ".claude/skills/lesson-qa.md",
       "description": "Validate any pipeline artefact against quality contracts"
     }
   ],
   "agents": [
     {
       "name": "corpus-reader",
-      "file": "agents/corpus-reader.md"
+      "file": ".claude/agents/corpus-reader.md"
     },
     {
       "name": "research-scout",
-      "file": "agents/research-scout.md"
+      "file": ".claude/agents/research-scout.md"
     },
     {
       "name": "qa-validator",
-      "file": "agents/qa-validator.md"
+      "file": ".claude/agents/qa-validator.md"
     },
     {
       "name": "citation-formatter",
-      "file": "agents/citation-formatter.md"
+      "file": ".claude/agents/citation-formatter.md"
     }
   ]
 }
