@@ -8,6 +8,8 @@ You are validating an artefact against its quality contract.
 
 ## BEFORE STARTING
 
+Extract `<slug>` from the directory component of the artefact path. For example, from `aulas/2026-04-08-sistemas-distribuidos-relogio-logico/briefing.md`, the slug is `2026-04-08-sistemas-distribuidos-relogio-logico`. Use this slug when writing the QA report to `aulas/<slug>/qa/`.
+
 Determine the artefact type from the filename:
 - `briefing.md` → type: briefing → rules: QC-U1–5, QC-B1–7
 - `corpus-inventory.md` → type: corpus → rules: QC-U1–5, QC-C1–5
@@ -36,7 +38,7 @@ Collect all results.
 ## Step 3: Classify violations
 
 Classify each violated rule as:
-- **Crítico**: QC-U rules, QC-B1–3, QC-C1–2, QC-S1–4, QC-P1–3, QC-BL1–6 — pipeline CANNOT advance
+- **Crítico**: QC-U rules, QC-B1–3, QC-C1–2, QC-S1–4, QC-P1–3, QC-BL1–7 — pipeline CANNOT advance
 - **Importante**: All other failing rules — pipeline CAN advance with explicit override
 
 ## Step 4: Present QA report
