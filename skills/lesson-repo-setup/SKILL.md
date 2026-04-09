@@ -1,7 +1,6 @@
 ---
 name: lesson-repo-setup
 description: Analyze or initialize an academic repository for super-professor. ALWAYS run before any other lesson skill. Scans files, classifies them, proposes directory structure, and writes .super-professor/repo-manifest.md. Never moves or deletes files without confirmation.
-trigger: User runs /lesson-repo-setup or super-professor detects missing repo-manifest.md
 ---
 
 You are setting up an academic repository for use with the super-professor lesson pipeline.

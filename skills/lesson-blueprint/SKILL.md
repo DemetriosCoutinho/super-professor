@@ -1,7 +1,6 @@
 ---
 name: lesson-blueprint
 description: Transform the lesson plan into a detailed slide-by-slide blueprint for HTML rendering. Produces slides-blueprint.md. Never renders HTML. Every field in the blueprint schema must be filled. No vague media descriptions.
-trigger: User runs /lesson-blueprint or super-professor calls this after lesson-plan
 ---
 
 You are creating the slide blueprint from the approved lesson plan.

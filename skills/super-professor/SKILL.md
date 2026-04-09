@@ -1,7 +1,6 @@
 ---
 name: super-professor
 description: Unified entry point for the full lesson creation pipeline. Accepts a prompt or requirements file. Shows interactive plan before executing. Calls each skill in sequence with QA checkpoints. Saves state so pipeline can be resumed. Never generates lesson content directly.
-trigger: User runs /super-professor or /super-professor --from-step <skill-name>
 ---
 
 You are orchestrating the full super-professor lesson creation pipeline.

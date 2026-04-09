@@ -1,5 +1,22 @@
 # Changelog
 
+## [0.2.0] — 2026-04-08
+
+### Changed
+- Restructured project for Claude Code marketplace distribution
+- Skills moved from `.claude/skills/*.md` to `skills/<name>/SKILL.md` (marketplace format)
+- Agents moved from `.claude/agents/*.md` to `agents/*.md`
+- Plugin manifest moved from `plugin.json` (root) to `.claude-plugin/plugin.json` (standard location)
+- Added `.claude-plugin/marketplace.json` for self-hosted marketplace support
+- Removed `install.sh` — installation now handled by `claude plugin install`
+- Bumped version to 0.2.0
+
+### Install (v0.2.0+)
+```bash
+claude marketplace add demetrioscoutinho/super-professor
+claude plugin install super-professor@super-professor-marketplace
+```
+
 ## [0.1.0] — 2026-04-08
 
 ### Added

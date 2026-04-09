@@ -9,25 +9,36 @@ Provides a pipeline of skills that takes you from raw academic materials to a st
 ## Install
 
 ```bash
-# In your academic repository:
-claude /plugin install super-professor
+# Add the marketplace (first time only)
+claude marketplace add demetrioscoutinho/super-professor
+
+# Install the plugin
+claude plugin install super-professor@super-professor-marketplace
+```
+
+## Update
+
+```bash
+claude plugin update super-professor@super-professor-marketplace
 ```
 
 ## First run: always start with repo setup
 
-```bash
+Open Claude Code inside your academic repository, then:
+
+```
 /lesson-repo-setup
 ```
 
 ## Full pipeline
 
-```bash
+```
 /super-professor "Quero criar uma aula sobre [TEMA] para [NÍVEL]"
 ```
 
 ## Individual skills
 
-```bash
+```
 /lesson-intake          # Close lesson briefing
 /lesson-corpus          # Audit repository materials
 /lesson-research        # Find high-quality external sources
@@ -49,3 +60,17 @@ All artefacts land in `aulas/<YYYY-MM-DD>-<slug>/`. The final output, `slides-bl
 
 - Claude Code with an active session
 - Academic repository with course materials (ementa, slides, PDFs, notes, etc.)
+
+## Pipeline overview
+
+```
+lesson-repo-setup → lesson-intake → lesson-corpus → lesson-research → lesson-plan → lesson-blueprint
+                                                                                           ↓
+                                                                                    slides-blueprint.md
+```
+
+Each step is validated by `/lesson-qa` before the next step can proceed. The pipeline can be paused and resumed at any point.
+
+## License
+
+MIT

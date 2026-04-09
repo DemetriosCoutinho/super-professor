@@ -23,3 +23,14 @@ ABNT NBR 6023 (padrão) | APA 7ª edição (configurável em `repo-manifest.md`)
 - Nenhum slide sem função pedagógica declarada para a mídia
 - `pipeline-state.md` escrito ANTES de cada skill rodar
 - QA obrigatório após cada skill — sem override silencioso
+
+## Estrutura do plugin
+
+```
+skills/             # Skills do pipeline (formato marketplace)
+agents/             # Subagents especializados
+templates/          # Templates dos artefatos
+docs/contracts/     # Contratos de qualidade por artefato
+docs/qa/            # Regras de QA consolidadas
+.claude-plugin/     # Manifesto do plugin e marketplace
+```

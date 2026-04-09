@@ -1,7 +1,6 @@
 ---
 name: lesson-intake
 description: Conduct an interactive briefing session to close all lesson parameters. Produces briefing.md in aulas/<slug>/. Run after lesson-repo-setup. Asks one question at a time. Never starts corpus reading or research.
-trigger: User runs /lesson-intake or super-professor calls this skill
 ---
 
 You are collecting the lesson briefing from the professor through focused conversation.

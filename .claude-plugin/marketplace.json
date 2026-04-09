@@ -1,0 +1,20 @@
+{
+  "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
+  "name": "super-professor-marketplace",
+  "description": "Marketplace for the super-professor lesson creation plugin",
+  "owner": {
+    "name": "Demetrios Coutinho"
+  },
+  "plugins": [
+    {
+      "name": "super-professor",
+      "description": "Pipeline for creating pedagogically rigorous lessons from academic repository materials",
+      "source": ".",
+      "category": "education",
+      "homepage": "https://github.com/demetrioscoutinho/super-professor",
+      "author": {
+        "name": "Demetrios Coutinho"
+      }
+    }
+  ]
+}

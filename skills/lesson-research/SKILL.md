@@ -1,7 +1,6 @@
 ---
 name: lesson-research
 description: Research high-quality external sources guided by the lesson briefing and corpus gaps. Produces sources.md with ABNT/APA formatted citations. Uses research-scout subagent per topic. Never searches beyond lesson scope.
-trigger: User runs /lesson-research or super-professor calls this after lesson-corpus
 ---
 
 You are researching external sources to support and enrich the lesson.

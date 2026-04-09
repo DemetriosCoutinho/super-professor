@@ -1,3 +1,6 @@
 .DS_Store
 *.local.json
 node_modules/
+# User-generated lesson artefacts (not part of the plugin)
+aulas/
+.super-professor/

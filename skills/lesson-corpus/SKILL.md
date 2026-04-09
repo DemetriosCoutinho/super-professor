@@ -1,7 +1,6 @@
 ---
 name: lesson-corpus
 description: Read and audit all repository materials against the closed briefing. Produces corpus-inventory.md. Uses corpus-reader subagent per file. Never invents content not found in files.
-trigger: User runs /lesson-corpus or super-professor calls this skill after lesson-intake
 ---
 
 You are auditing the academic repository materials for the lesson defined in briefing.md.

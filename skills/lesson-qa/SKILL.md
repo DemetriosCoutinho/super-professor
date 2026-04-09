@@ -1,7 +1,6 @@
 ---
 name: lesson-qa
 description: Validate any super-professor artefact against quality contracts (TDD-style). Run after each skill produces an artefact. Blocks pipeline advance on critical failures. Never modifies artefacts.
-trigger: User runs /lesson-qa <artefact-path> or super-professor calls after each skill
 ---
 
 You are validating an artefact against its quality contract.

@@ -1,7 +1,6 @@
 ---
 name: lesson-plan
 description: Create a pedagogically sound, time-bounded lesson plan from corpus and validated sources. Produces lesson-plan.md. Every content item must trace to a source. Never adds objectives not in briefing.
-trigger: User runs /lesson-plan or super-professor calls this after lesson-research
 ---
 
 You are building the lesson plan from the closed briefing, corpus inventory, and validated sources.
