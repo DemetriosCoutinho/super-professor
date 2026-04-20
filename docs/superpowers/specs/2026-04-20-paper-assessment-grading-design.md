@@ -46,7 +46,7 @@ Teacher                    super_professor agent          External
 ### External Dependencies
 
 - **OMRChecker** (`pip install omrchecker`) — open-source Python OMR library, runs as local CLI, no server needed
-- **Google Classroom API** — OAuth 2.0, standard REST API
+- **gws CLI** (`gws classroom ...`) — Google Workspace CLI that wraps the Classroom API; handles auth, roster fetching, and grade posting via shell commands
 - **Claude Vision** — fallback for low-confidence bubble detections only
 
 ---
@@ -108,22 +108,35 @@ passing_score: 60
 
 ### Authentication
 
-- OAuth 2.0 flow; browser prompt on first run
-- Credentials stored in `.super-professor/google-credentials.json` (gitignored)
-
-### Required OAuth Scopes
-
-- `https://www.googleapis.com/auth/classroom.coursework.students` — post grades
-- `https://www.googleapis.com/auth/classroom.rosters.readonly` — match student IDs to roster
+Auth is handled entirely by the `gws` CLI — no OAuth setup needed in the skill itself. The agent calls `gws` commands directly via Bash; `gws` manages credentials transparently.
 
 ### Sync Flow
 
+The agent runs `gws classroom` shell commands in sequence:
+
+```bash
+# 1. Fetch roster to map student emails → submission IDs
+gws classroom courses students list \
+  --params '{"courseId": "<course_id>"}'
+
+# 2. List existing submissions for the assignment
+gws classroom courses courseWork studentSubmissions list \
+  --params '{"courseId": "<course_id>", "courseWorkId": "<assignment_id>"}'
+
+# 3. Post grade for each matched student
+gws classroom courses courseWork studentSubmissions patch \
+  --params '{"courseId":"<course_id>","courseWorkId":"<assignment_id>","id":"<submission_id>","updateMask":"assignedGrade,draftGrade"}' \
+  --json '{"assignedGrade": <score>, "draftGrade": <score>}'
+```
+
+Steps:
 1. Read `scores.json`
-2. Fetch Google Classroom roster for `course_id`
-3. Match student IDs from answer sheets to roster
-4. For each matched student: `PATCH /v1/courses/{courseId}/courseWork/{courseWorkId}/studentSubmissions/{id}` with grade
-5. Unmatched students listed in output for manual resolution
-6. Write sync status to `classroom-sync.json`
+2. `gws classroom courses students list` → build email-to-student map
+3. `gws classroom courses courseWork studentSubmissions list` → get submission IDs
+4. Match student IDs from answer sheets to roster emails
+5. For each matched student: patch submission with grade
+6. Unmatched students listed in output for manual resolution
+7. Write sync status to `classroom-sync.json`
 
 ### v1 Limitations (by design)
 
@@ -140,7 +153,8 @@ passing_score: 60
 |-----------|----------|
 | Photo too blurry/dark | Sheet flagged as unreadable, listed for manual review |
 | Student ID not in roster | Score held in `unmatched/`, reported to teacher |
-| Google API auth failure | Clear error with re-auth instructions |
+| `gws` CLI not found | Agent detects missing tool, prints install instructions |
+| `gws` auth failure | Agent surfaces the `gws` error message and stops |
 | OMRChecker not installed | Agent detects missing dep, prints install command |
 
 ---
