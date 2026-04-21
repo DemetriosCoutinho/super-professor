@@ -33,3 +33,11 @@ answers:
   - Q20: D
 student_id_field: true
 passing_score: 60
+institution: INSTITUTION
+campus: CAMPUS
+teacher: TEACHER
+class_name: CLASS_NAME
+duration_minutes: DURATION_MINUTES
+instructions: INSTRUCTIONS
+matricula_digits: 14
+variant: VARIANT

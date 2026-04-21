@@ -1,5 +1,6 @@
 {
   "description": "super-professor standard 20-question A4 sheet",
+  "_comment_matricula": "StudentID uses 14 digits to match IFRN matricula format (matricula_digits: 14)",
   "pageDimensions": [2480, 3508],
   "bubbleDimensions": [40, 40],
   "preProcessors": [
@@ -15,7 +16,7 @@
     "StudentID": {
       "fieldType": "QTYPE_INT",
       "origin": [160, 420],
-      "fieldLabels": ["D1","D2","D3","D4","D5","D6","D7","D8","D9"],
+      "fieldLabels": ["D1","D2","D3","D4","D5","D6","D7","D8","D9","D10","D11","D12","D13","D14"],
       "labelsGap": 68,
       "bubblesGap": 52,
       "direction": "horizontal",
