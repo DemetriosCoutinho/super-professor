@@ -1,48 +1,78 @@
 ---
 name: assessment-create
-description: Create a new paper assessment. Collects title, date, Google Classroom IDs, and answer key interactively. Produces assessment-manifest.md and a printable answer-sheet.html. One question per message.
+description: >
+  Create a printed paper assessment (prova) with institutional IFRN branding.
+  Generates LaTeX source, PDF (A4 duplex-optimized, 2-column), and HTML preview
+  from lesson-assessment outputs or a provided questions file. Includes printable
+  answer sheet (gabarito) with 14-digit student ID bubble grid (matrícula format:
+  20261094010005) compatible with OMRChecker. Run this after /lesson-assessment
+  or provide a questions file path. Use whenever the teacher needs to print a
+  paper exam or answer sheet for IFRN students.
 ---
 
-You are collecting the assessment parameters from the teacher through focused conversation.
+You are guiding the teacher through creating a printable IFRN assessment.
 
 ## BEFORE STARTING
 
-Check if there is already a `.super-professor/repo-manifest.md` in the current repo. If present, use `course_id` from it if available. Otherwise proceed without it.
+1. Check `.super-professor/repo-manifest.md` — if present, pre-fill `course_id` from it.
+2. Check whether `skills/assessment-create/assets/if.jpeg` exists.
+   - If missing: say "⚠️ Logo não encontrado em `skills/assessment-create/assets/if.jpeg`. Coloque o logo IFRN como `if.jpeg` neste diretório antes de compilar. Continuando sem logo." Then continue — the render script degrades gracefully.
 
-## Fields to collect
+## STEP 0 — DEPENDENCY CHECK
 
-- `title` — assessment title (e.g., "Prova P1 — Cálculo I")
-- `date` — assessment date (default: today's date)
-- `course_id` — Google Classroom course ID (teacher must provide; if unsure: "Acesse o Google Classroom → Configurações da turma → ID da turma")
-- `assignment_id` — Google Classroom assignment ID (teacher must create the assignment in Classroom first, then provide the ID from the assignment URL)
-- `answers` — the answer key: 20 letters, one per question (A, B, C, or D)
-- `passing_score` — minimum percentage to pass (default: 60)
+Run:
+```bash
+python3 scripts/check_print_deps.py
+```
 
-## Conversation rules
+- If any required tool is **missing**: stop, show the install plan from the JSON output, and tell the teacher: "Instale as dependências acima e depois execute `/assessment-create` novamente." Do NOT install automatically.
+- If **all found**: proceed and tell the teacher "Dependências OK."
 
-- Ask EXACTLY ONE question per message
-- If the teacher provides multiple fields at once, accept all and ask only what's still missing
-- Do not repeat questions about fields already provided
+## INPUT MODE DETECTION
 
-## Question order
+Ask (one message):
+> "Esta avaliação tem enunciado de questões preparado pelo `/lesson-assessment`?"
 
-1. "Qual é o título desta avaliação?" (e.g., "Prova P1 — Cálculo I")
-2. "Qual é a data da avaliação?" (default: today)
-3. "Qual é o ID da turma no Google Classroom?" (explain where to find it if needed)
-4. "Qual é o ID da atividade no Google Classroom?" (explain: create the assignment first, then get the ID from the URL)
-5. "Informe o gabarito das 20 questões, uma por vez ou todas de uma vez (A, B, C ou D por questão)."
-6. "Qual é a nota mínima para aprovação? (padrão: 60%)"
+**Mode A — pipeline** (teacher says YES):
+- Ask: "Qual é o slug da aula? (ex: `introducao-a-redes`)"
+- Resolve: `aulas/<slug>/assessment.md`, `aulas/<slug>/assessment-key.md`, `aulas/<slug>/briefing.md`
+- Confirm the files exist before proceeding.
 
-## After collecting all fields
+**Mode B — legacy/interactive** (teacher says NO):
+- Collect answers interactively (see Fields below).
+- In this mode: generate **only** the HTML answer sheet. Skip prova PDF/LaTeX.
+- Still copy `templates/omr-template.json` to the output dir.
+- Still run answer-sheet LaTeX compilation if xelatex is available.
 
-### 1. Generate the slug
+## FIELDS TO COLLECT (one question per message)
 
-Format: `<YYYY-MM-DD>-<title-slug>`
-- Convert title to lowercase kebab-case, no accents
-- Example: `2026-04-20-prova-p1-calculo-i`
+Ask only what is still unknown. Accept multiple fields if offered at once.
 
-### 2. Create the assessment directory structure
+| # | Field | Question | Default |
+|---|-------|----------|---------|
+| 1 | `institution` | "Nome da instituição" | "Instituto Federal de Educação, Ciência e Tecnologia do Rio Grande do Norte" |
+| 2 | `campus` | "Campus" | "Campus Pau dos Ferros" |
+| 3 | `teacher` | "Nome do(a) professor(a)" | — |
+| 4 | `class_name` | "Turma/semestre (ex: ADS 2026.1)" | — |
+| 5 | `duration_minutes` | "Duração em minutos" | 90 |
+| 6 | `exam_kind` | "Tipo de avaliação (ex: 'Prova Final', 'Prova P1')" | "Avaliação" |
+| 7 | `variant` | "Há variantes de prova embaralhada? (A, B ou Única)" | Única |
+| 8 | `passing_score` | "Nota mínima para aprovação em %" | 60 |
+| 9 | `course_id` | "ID da turma no Google Classroom (só se for sincronizar depois)" | — |
+| 10 | `assignment_id` | "ID da atividade no Google Classroom (só se for sincronizar depois)" | — |
 
+**Mode B only — also collect:**
+- `title` — "Qual é o título desta avaliação? (ex: Prova P1 — Redes I)"
+- `date` — "Qual é a data da avaliação?" (default: today)
+- `answers` — "Informe o gabarito das 20 questões (A/B/C/D), uma por vez ou todas de uma vez."
+
+## DIRECTORY AND MANIFEST
+
+Generate slug: `<YYYY-MM-DD>-<title-slug>` (lowercase kebab-case, no accents).
+- Mode A: derive title from `assessment.md` heading; date from assessment frontmatter or today.
+- Mode B: use collected `title` and `date`.
+
+Create directory structure:
 ```
 assessments/<slug>/
 assessments/<slug>/photos/
@@ -50,60 +80,63 @@ assessments/<slug>/results/
 assessments/<slug>/results/unmatched/
 ```
 
-### 3. Write assessment-manifest.md
+Write `assessments/<slug>/assessment-manifest.md` from `templates/assessment-manifest.template.md`.
+Fill all placeholders: SLUG, TIMESTAMP, TITLE, DATE, COURSE_ID, ASSIGNMENT_ID, answers Q1–Q20, passing_score, and all collected fields.
 
-Copy `templates/assessment-manifest.template.md`. Fill every placeholder:
-- `SLUG` → the generated slug
-- `TIMESTAMP` → current ISO timestamp
-- `TITLE` → the title
-- `DATE` → the date
-- `COURSE_ID` → the course ID
-- `ASSIGNMENT_ID` → the assignment ID
-- Replace the default answer key with the teacher's answers (Q1–Q20)
-- `passing_score` → the provided value or 60
+**Do NOT write `assessment-manifest.md` before all required fields are collected.**
 
-Write to `assessments/<slug>/assessment-manifest.md`.
+## RENDER PIPELINE
 
-### 4. Generate answer-sheet.html
+Tell the teacher: "Iniciando renderização... Isso pode levar 30–60 segundos."
 
-Read `templates/answer-sheet.template.html`. Replace:
-- `{{TITLE}}` → the assessment title
-- `{{DATE}}` → the assessment date
-- `{{QUESTIONS_LEFT}}` → HTML for questions 1–10
-- `{{QUESTIONS_RIGHT}}` → HTML for questions 11–20
-
-Question HTML format (repeat for each question number N):
-```html
-<div class="question-row">
-  <span class="q-num">N.</span>
-  <div class="options">
-    <div class="option"><span>A</span><div class="opt-bubble"></div></div>
-    <div class="option"><span>B</span><div class="opt-bubble"></div></div>
-    <div class="option"><span>C</span><div class="opt-bubble"></div></div>
-    <div class="option"><span>D</span><div class="opt-bubble"></div></div>
-  </div>
-</div>
+**Mode A — full render:**
+```bash
+python3 scripts/render_assessment.py --lesson <slug> --out assessments/<slug>/
 ```
 
-Write to `assessments/<slug>/answer-sheet.html`.
+Or, if teacher provided an explicit file path:
+```bash
+python3 scripts/render_assessment.py --from <path/to/assessment.md> --out assessments/<slug>/
+```
 
-### 5. Copy OMR template
+**Mode B — answer sheet only:**
+- Generate `answer-sheet.html` from `templates/answer-sheet.template.html` using the collected fields.
+- Copy `templates/omr-template.json` to `assessments/<slug>/omr-template.json`.
+- If xelatex is available, attempt answer-sheet LaTeX compilation. If it fails, show the log excerpt and continue — the HTML is sufficient for printing.
 
-Copy `templates/omr-template.json` to `assessments/<slug>/omr-template.json`.
+**Handling render script exit codes:**
+- **Exit 0**: all good, proceed to confirmation.
+- **Exit 1** (hard error): show the full error output. Stop. Tell teacher to fix the issue and re-run.
+- **Exit 2** (layout QA warnings): show the warnings. Ask: "Deseja continuar com `--allow-whitespace` (ignora verificação de preenchimento) ou prefere ajustar o conteúdo primeiro?"
+  - If teacher chooses to continue: re-run with `--allow-whitespace` appended.
 
-### 6. Confirm to the teacher
+Always show dep check results and layout QA results to the teacher. Never suppress them.
 
-Say:
-"Avaliação criada em `assessments/<slug>/`.
+## CONFIRM TO TEACHER
 
-- **Gabarito**: salvo em `assessment-manifest.md`
-- **Folha de resposta**: `answer-sheet.html` — abra no navegador e imprima (Ctrl+P), selecione A4
+```
+✅ Avaliação criada em `assessments/<slug>/`.
 
-Após a prova, coloque as fotos das folhas em `assessments/<slug>/photos/` e execute `/assessment-grade`."
+Artefatos gerados:
+- `prova.pdf` — imprima este arquivo (A4, frente/verso) → as questões
+- `answer-sheet.pdf` — folha de respostas com grade de bolhas
+- `assessment-duplex.pdf` — **use este** para impressão duplex (prova + gabarito em um arquivo)
+- `prova.html` / `answer-sheet.html` — pré-visualização no navegador
+- `assessment-manifest.md` — gabarito e metadados
+
+Logo (if.jpeg): [found / não encontrado — compilado sem logo]
+Dependências: [todas encontradas / lista de ausentes]
+
+Após a prova: coloque fotos das folhas em `assessments/<slug>/photos/` e execute `/assessment-grade`.
+```
 
 ## GUARDRAILS
 
-- NEVER write assessment-manifest.md before all fields are collected
+- NEVER write `assessment-manifest.md` before all required fields are collected
 - NEVER invent answers — only use what the teacher provides
-- NEVER create the assignment in Google Classroom — teacher must do that first
+- NEVER install missing dependencies automatically
+- NEVER run xelatex with `--force` or skip log checking
+- NEVER create the Google Classroom assignment — teacher must do that first
 - NEVER ask more than one question per message
+- ALWAYS show dependency check results before rendering
+- ALWAYS show layout QA results and let teacher decide on exit code 2
