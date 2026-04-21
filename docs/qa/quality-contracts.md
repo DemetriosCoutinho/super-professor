@@ -63,3 +63,19 @@ professor provides an explicit override with written justification.
 - QC-BL8: Every slide with `priority: essencial` must have at least one `sources` entry
 - QC-BL9: `rendering_notes` and `accessibility_notes` must be non-empty for every slide
 - QC-BL10: All slides must trace to a `lesson_block_ref` that exists in lesson-plan.md
+
+## questions.md contracts
+
+- QC-Q1: Every question has a `source_ref` that matches a `source_id` in `sources.md`
+- QC-Q2: All `alternative` questions have exactly 4 options (a, b, c, d); correct answer is stored as option `a`
+- QC-Q3: Every question has a non-empty `rationale` field
+- QC-Q4: Bloom level is consistent with difficulty: fácil → conhecimento/compreensão; média → aplicação/análise; difícil → síntese/avaliação
+- QC-Q5: No two questions share identical or near-identical `text` fields
+
+## assessment files contracts
+
+- QC-A1: All question IDs in the assessment exist in `questions.md`
+- QC-A2: The student file (`assessment-A<NN>.md`) contains no rationale, no correct answer indicators, and no source references
+- QC-A3: Correct answer distribution across A/B/C/D is balanced: no position has more than ⌊N/4⌋+1 correct answers (alternative questions only)
+- QC-A4: `question-usage.md` has been updated: all selected question IDs show this assessment ID in their `assessments` column
+- QC-A5: At least one question maps to each briefing objective (by topic alignment)
