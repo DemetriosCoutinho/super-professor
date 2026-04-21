@@ -16,6 +16,19 @@ Plugin para criação de aulas modernas e pedagogicamente rigorosas a partir de 
 | /lesson-assessment | Gera avaliação a partir do banco de questões | questions.md |
 | /lesson-qa | Valida qualquer artefato | artefato-alvo |
 | /super-professor | Pipeline completo com checkpoints | repo-manifest.md |
+| /assessment-create | Cria avaliação impressa (gabarito + folha de respostas HTML) | Nenhum |
+| /assessment-grade | Corrige folhas fotografadas via OMRChecker + Claude Vision | photos/ preenchido |
+| /assessment-sync | Envia notas ao Google Classroom via gws CLI | scores.json + student-map.csv |
+
+## Assessment pipeline (correção de provas impressas)
+
+```
+/assessment-create   # cria gabarito e folha de respostas impressa
+/assessment-grade    # corrige fotos → scores.json + grade-report.md
+/assessment-sync     # envia notas ao Google Classroom
+```
+
+Pré-requisitos externos: `pip install omrchecker` e gws CLI autenticado.
 
 ## Padrão de citação
 ABNT NBR 6023 (padrão) | APA 7ª edição (configurável em `repo-manifest.md`)
