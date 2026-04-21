@@ -1,4 +1,5 @@
 .DS_Store
+.worktrees/
 *.local.json
 node_modules/
 # User-generated lesson artefacts (not part of the plugin)
