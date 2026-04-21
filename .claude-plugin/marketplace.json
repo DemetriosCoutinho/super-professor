@@ -9,7 +9,7 @@
     {
       "name": "super-professor",
       "description": "Pipeline for creating pedagogically rigorous lessons from academic repository materials",
-      "source": ".",
+      "source": "./",
       "category": "education",
       "homepage": "https://github.com/demetrioscoutinho/super-professor",
       "author": {
