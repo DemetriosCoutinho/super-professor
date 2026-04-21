@@ -4,3 +4,4 @@ node_modules/
 # User-generated lesson artefacts (not part of the plugin)
 aulas/
 .super-professor/
+tools/OMRChecker/

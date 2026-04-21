@@ -14,21 +14,36 @@ You process one answer sheet image using OMRChecker and return the detected answ
 
 Run:
 ```bash
-python -m omrchecker --version 2>&1
+OMRCHECKER_DIR="$(dirname "$(realpath "$0")")/../../tools/OMRChecker"
+"$OMRCHECKER_DIR/.venv/bin/python3" "$OMRCHECKER_DIR/main.py" --help 2>&1 | head -3
 ```
 
-If the command fails with "No module named omrchecker", stop and return:
+Resolve the OMRChecker directory relative to the project root:
+- Project root: `/Users/demetrios/Projects/super_professor`
+- OMRChecker: `/Users/demetrios/Projects/super_professor/tools/OMRChecker`
+- Python: `/Users/demetrios/Projects/super_professor/tools/OMRChecker/.venv/bin/python3`
+
+If the check fails, stop and return:
 ```json
-{"error": "omrchecker_not_installed", "message": "Run: pip install omrchecker"}
+{"error": "omrchecker_not_installed", "message": "OMRChecker not found at tools/OMRChecker. Run: git clone https://github.com/Udayraj123/OMRChecker.git tools/OMRChecker && tools/OMRChecker/.venv/bin/pip install opencv-python-headless -r tools/OMRChecker/requirements.txt"}
 ```
 
 ## Step 2: Run OMRChecker
 
+OMRChecker requires the template to be named `template.json` and placed inside the input directory. Before running, copy the omr-template.json into a temp input dir alongside the photo:
+
 ```bash
-python -m omrchecker \
-  --inputDir "$(dirname <photo_path>)" \
-  --outputDir "<output_dir>" \
-  --template "<omr_template_path>"
+OMRCHECKER_DIR="/Users/demetrios/Projects/super_professor/tools/OMRChecker"
+PYTHON="$OMRCHECKER_DIR/.venv/bin/python3"
+
+# Create a temp input dir with the photo and template
+TMPDIR=$(mktemp -d)
+cp "<photo_path>" "$TMPDIR/"
+cp "<omr_template_path>" "$TMPDIR/template.json"
+
+# Run OMRChecker
+cd "$OMRCHECKER_DIR"
+"$PYTHON" main.py --inputDir "$TMPDIR" --outputDir "<output_dir>"
 ```
 
 OMRChecker writes a CSV result file to `<output_dir>/Results/`.

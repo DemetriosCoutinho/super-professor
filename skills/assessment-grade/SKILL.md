@@ -15,10 +15,11 @@ You are orchestrating the grading pipeline for a paper assessment.
 
 Run:
 ```bash
-python -m omrchecker --version 2>&1
+/Users/demetrios/Projects/super_professor/tools/OMRChecker/.venv/bin/python3 \
+  /Users/demetrios/Projects/super_professor/tools/OMRChecker/main.py --help 2>&1 | head -2
 ```
 
-If it fails: stop and say "OMRChecker não encontrado. Execute: `pip install omrchecker`"
+If it fails: stop and say "OMRChecker não encontrado. Execute: `git clone https://github.com/Udayraj123/OMRChecker.git tools/OMRChecker && cd tools/OMRChecker && python3 -m venv .venv && .venv/bin/pip install opencv-python-headless -r requirements.txt`"
 
 ## Step 2: Process each photo with omr-processor
 
