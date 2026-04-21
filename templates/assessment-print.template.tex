@@ -1,0 +1,59 @@
+\documentclass[a4paper,10pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[brazil]{babel}
+\usepackage[margin=1.4cm]{geometry}
+\setlength{\columnsep}{0.7cm}
+\usepackage{multicol}
+\usepackage{microtype}
+\usepackage{parskip}
+\usepackage{enumitem}
+\usepackage{titlesec}
+\usepackage{tikz}
+\usepackage{tikz-uml}
+\usepackage{adjustbox}
+\usepackage{minted}
+\setminted{fontsize=\scriptsize, breaklines=true, autogobble=true, frame=single, framesep=2mm, tabsize=4}
+\usepackage{needspace}
+\usepackage{graphicx}
+\titleformat{\section}{\large\bfseries}{\thesection}{0.5em}{}
+\titleformat{\subsection}{\normalsize\bfseries}{\thesubsection}{0.5em}{}
+\newcommand{\umlscale}{0.85}
+\newcommand{\umlpic}[1]{%
+  \begin{center}\begin{tikzpicture}[scale=\umlscale, transform shape]#1\end{tikzpicture}\end{center}}
+\newenvironment{questao}[1]{%
+  \needspace{4\baselineskip}\vspace{0.6em}\noindent{\bfseries Quest\~{a}o #1}\par}{\vspace{0.2em}}
+\newenvironment{alternativas}{%
+  \begin{enumerate}[label=\textbf{\Alph*)}, leftmargin=*, itemsep=0.15em, topsep=0.2em]}{%
+  \end{enumerate}}
+\usepackage{fancyhdr}
+\usepackage{lastpage}
+\pagestyle{fancy}
+\lhead{\textsc{IFRN}}
+\chead{\textsc{{{COURSE_SHORT}}}}
+\rhead{\textsc{{{EXAM_KIND}}}}
+\cfoot{\texttt{P\'{a}gina \thepage/\pageref{LastPage}}}
+\renewcommand{\headrulewidth}{1pt}
+\renewcommand{\footrulewidth}{1pt}
+\begin{document}
+\thispagestyle{empty}
+\begin{center}
+  \begin{figure}[h!]
+    \centering
+    \includegraphics[width=8cm]{{{LOGO_PATH}}}
+  \end{figure}
+  \begin{flushleft}
+    Aluno: \hrulefill~Matr\'{\i}cula: \rule{4.5cm}{.1mm} \\[0.2cm]
+    Disciplina: {{DISCIPLINE}} \hfill Turma: \rule{4cm}{.1mm} \\[0.2cm]
+    Professor(a): {{TEACHER}} \hfill Data: {{DATE}}\\[0.5cm]
+  \end{flushleft}
+  {\large\bfseries --- {{EXAM_KIND}} --- {{TOTAL_POINTS}} pontos ---}\\[0.3cm]
+  {\small\itshape {{INSTRUCTIONS}}}
+  \vspace{0.4cm}
+  \hrule
+  \vspace{0.3cm}
+\end{center}
+\begin{multicols}{2}
+{{QUESTIONS}}
+\end{multicols}
+\end{document}

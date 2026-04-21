@@ -1,0 +1,203 @@
+% answer-sheet.template.tex
+% FOLHA DE RESPOSTAS — super-professor / IFRN
+%
+% Placeholders replaced by render_assessment.py:
+%   {{LOGO_PATH}}    — absolute path to if.jpeg (or relative if copied to build dir)
+%   {{TITLE}}        — assessment title (e.g. "1ª Avaliação Bimestral")
+%   {{DATE}}         — date string (e.g. "21/04/2026")
+%   {{COURSE_SHORT}} — course abbreviation (e.g. "ADS")
+%
+% Layout is calibrated to A4 at 300 dpi (2480×3508 px).
+% Fiducial markers (10mm solid squares) are placed at the four page corners
+% using tikz overlay so that CropOnMarkers can locate them.
+% Bubble grid positions match omr-template.json field origins:
+%   StudentID origin [160, 420]  → ~13.5mm from left, ~35.5mm from top
+%   QLeft     origin [160, 1050] → ~13.5mm from left, ~88.9mm from top
+%   QRight    origin [1340, 1050]→ ~113.4mm from left, ~88.9mm from top
+%   labelsGap (StudentID) = 68px ≈ 5.76mm
+%   bubblesGap (StudentID) = 52px ≈ 4.40mm
+%   labelsGap (Questions)  = 78px ≈ 6.60mm
+%   bubblesGap (Questions) = 62px ≈ 5.25mm
+
+\documentclass[a4paper,10pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[brazil]{babel}
+% Margins: 10mm all around — gives room for fiducials at corners
+\usepackage[margin=10mm, noheadfoot]{geometry}
+\usepackage{graphicx}
+\usepackage{tikz}
+\usetikzlibrary{calc}
+\usepackage{array}
+\usepackage{tabularx}
+\usepackage{booktabs}
+\usepackage{microtype}
+\usepackage{parskip}
+
+% -----------------------------------------------------------------------
+% Fiducial marker command: solid 10mm × 10mm black square
+% -----------------------------------------------------------------------
+\newcommand{\fiducial}{%
+  \begin{tikzpicture}
+    \fill[black] (0,0) rectangle (10mm,10mm);
+  \end{tikzpicture}%
+}
+
+% -----------------------------------------------------------------------
+% Bubble command: empty circle, 5.5mm diameter (matches 40px @ 300dpi ≈ 3.4mm
+% with slight enlargement for legibility — OMRChecker uses bubbleDimensions
+% [40,40] but printed size can be slightly larger as long as spacing matches)
+% -----------------------------------------------------------------------
+\newcommand{\bubble}{\tikz\draw[thick] (0,0) circle (2.75mm);}
+
+% -----------------------------------------------------------------------
+% Suppress page numbers
+% -----------------------------------------------------------------------
+\pagestyle{empty}
+
+\begin{document}
+
+% -----------------------------------------------------------------------
+% FIDUCIAL MARKERS — placed at exact page corners via TikZ overlay
+% The markers are 10mm × 10mm solid squares.
+% -----------------------------------------------------------------------
+\begin{tikzpicture}[remember picture, overlay]
+  % Top-left corner
+  \fill[black] (current page.north west)
+    rectangle ++(10mm,-10mm);
+  % Top-right corner
+  \fill[black] (current page.north east)
+    rectangle ++(-10mm,-10mm);
+  % Bottom-left corner
+  \fill[black] (current page.south west)
+    rectangle ++(10mm,10mm);
+  % Bottom-right corner
+  \fill[black] (current page.south east)
+    rectangle ++(-10mm,10mm);
+\end{tikzpicture}%
+
+% -----------------------------------------------------------------------
+% HEADER — IFRN logo + title
+% -----------------------------------------------------------------------
+\begin{center}
+  \includegraphics[width=7cm]{{{LOGO_PATH}}}\\[2mm]
+  {\large\bfseries FOLHA DE RESPOSTAS}\\[1mm]
+  {\normalsize {{TITLE}}}\\[1mm]
+  {\small \textsc{{{COURSE_SHORT}}} \quad|\quad Data: {{DATE}}}
+\end{center}
+
+\vspace{2mm}
+\noindent
+Nome: \hrulefill \quad Turma: \rule{3cm}{.1mm}
+\vspace{4mm}
+
+\hrule
+\vspace{4mm}
+
+% -----------------------------------------------------------------------
+% MATRÍCULA GRID — 14 columns (D1–D14), digits 0–9 per column
+% Calibrated to match omr-template.json StudentID block:
+%   origin [160, 420] → after 10mm margin ≈ 3.5mm internal offset accounted
+%   labelsGap = 68px ≈ 5.76mm (center-to-center of columns)
+%   bubblesGap = 52px ≈ 4.40mm (center-to-center of rows)
+% We approximate with column width ~5.76mm and row sep ~4.4mm.
+% -----------------------------------------------------------------------
+\noindent{\bfseries\small Matr\'{\i}cula — preencha \emph{um} d\'{\i}gito por coluna:}
+
+\vspace{2mm}
+
+\noindent
+\begin{tikzpicture}[
+    x=5.76mm,   % matches labelsGap = 68px @ 300dpi ≈ 5.76mm
+    y=-4.40mm,  % matches bubblesGap = 52px @ 300dpi ≈ 4.40mm (downward)
+    font=\scriptsize
+  ]
+  % Column labels D1..D14
+  \foreach \col in {1,...,14} {
+    \node[font=\scriptsize\bfseries] at (\col-1, -0.6) {D\col};
+  }
+  % Digit bubbles 0..9
+  \foreach \col in {1,...,14} {
+    \foreach \digit in {0,...,9} {
+      \draw[thick] (\col-1, \digit) circle (2.0mm);
+      \node[font=\tiny] at (\col-1, \digit) {\digit};
+    }
+  }
+\end{tikzpicture}
+
+\vspace{5mm}
+\hrule
+\vspace{4mm}
+
+% -----------------------------------------------------------------------
+% QUESTION BUBBLE GRID — 2 columns, Q1–Q10 left, Q11–Q20 right
+% Calibrated to match omr-template.json QLeft / QRight blocks:
+%   QLeft  origin [160, 1050]  → same left margin as StudentID
+%   QRight origin [1340, 1050] → 1340px from left ≈ 113.4mm from page left
+%                                with 10mm margin → ~103.4mm from text left
+%   labelsGap = 78px ≈ 6.60mm (row height, vertical direction)
+%   bubblesGap = 62px ≈ 5.25mm (bubble center-to-center horizontally)
+% -----------------------------------------------------------------------
+\noindent{\bfseries\small Respostas — preencha completamente o c\'{\i}rculo:}
+
+\vspace{2mm}
+
+\noindent
+\begin{minipage}[t]{0.48\textwidth}
+  % Q1–Q10
+  \begin{tikzpicture}[
+      x=5.25mm,   % bubblesGap = 62px ≈ 5.25mm
+      y=-6.60mm,  % labelsGap = 78px ≈ 6.60mm (downward)
+      font=\scriptsize
+    ]
+    % Header labels
+    \node[font=\scriptsize\bfseries] at (0,    -0.5) {Q};
+    \node[font=\scriptsize\bfseries] at (1,    -0.5) {A};
+    \node[font=\scriptsize\bfseries] at (2,    -0.5) {B};
+    \node[font=\scriptsize\bfseries] at (3,    -0.5) {C};
+    \node[font=\scriptsize\bfseries] at (4,    -0.5) {D};
+    % Questions 1–10
+    \foreach \q in {1,...,10} {
+      \pgfmathsetmacro{\row}{\q - 1}
+      \node[font=\small\bfseries] at (0, \row) {\q};
+      \foreach \bpos in {1,2,3,4} {
+        \draw[thick] (\bpos, \row) circle (2.5mm);
+      }
+    }
+  \end{tikzpicture}
+\end{minipage}%
+\hfill
+\begin{minipage}[t]{0.48\textwidth}
+  % Q11–Q20
+  \begin{tikzpicture}[
+      x=5.25mm,
+      y=-6.60mm,
+      font=\scriptsize
+    ]
+    % Header labels
+    \node[font=\scriptsize\bfseries] at (0,    -0.5) {Q};
+    \node[font=\scriptsize\bfseries] at (1,    -0.5) {A};
+    \node[font=\scriptsize\bfseries] at (2,    -0.5) {B};
+    \node[font=\scriptsize\bfseries] at (3,    -0.5) {C};
+    \node[font=\scriptsize\bfseries] at (4,    -0.5) {D};
+    % Questions 11–20
+    \foreach \q in {11,...,20} {
+      \pgfmathsetmacro{\row}{\q - 11}
+      \node[font=\small\bfseries] at (0, \row) {\q};
+      \foreach \bpos in {1,2,3,4} {
+        \draw[thick] (\bpos, \row) circle (2.5mm);
+      }
+    }
+  \end{tikzpicture}
+\end{minipage}
+
+\vspace{6mm}
+\hrule
+\vspace{2mm}
+
+{\footnotesize\centering
+  Use somente caneta azul ou preta. Preencha completamente o c\'{\i}rculo.
+  N\~{a}o rasure nem dobre esta folha.\par
+}
+
+\end{document}
