@@ -16,7 +16,7 @@ Plugin para criação de aulas modernas e pedagogicamente rigorosas a partir de 
 | /lesson-assessment | Gera avaliação a partir do banco de questões | questions.md |
 | /lesson-qa | Valida qualquer artefato | artefato-alvo |
 | /super-professor | Pipeline completo com checkpoints | repo-manifest.md |
-| /assessment-create | Cria avaliação impressa (gabarito + folha de respostas HTML) | Nenhum |
+| /assessment-create | Cria avaliação impressa: prova + gabarito em LaTeX/PDF/HTML (A4, 2 colunas, duplex, logo IFRN, matrícula 14 dígitos) | assessment.md + assessment-key.md (ou modo interativo) |
 | /assessment-grade | Corrige folhas fotografadas via OMRChecker + Claude Vision | photos/ preenchido |
 | /assessment-sync | Envia notas ao Google Classroom via gws CLI | scores.json + student-map.csv |
 | /assessment-sync-check | Preflight dry-run do Classroom sync (sem postar notas) | scores.json + student-map.csv |
@@ -37,7 +37,7 @@ Plugin para criação de aulas modernas e pedagogicamente rigorosas a partir de 
 ## Assessment pipeline (correção de provas impressas)
 
 ```
-/assessment-create   # cria gabarito e folha de respostas impressa
+/assessment-create   # renderiza prova + folha de respostas (LaTeX → PDF + HTML)
 /assessment-grade    # corrige fotos → scores.json + grade-report.md
 /assessment-sync     # envia notas ao Google Classroom
 ```
@@ -45,11 +45,14 @@ Plugin para criação de aulas modernas e pedagogicamente rigorosas a partir de 
 Pré-requisitos externos:
 - OMRChecker vendorizado em `tools/OMRChecker/` (instalar dependências: `pip install -r tools/OMRChecker/requirements.txt`)
 - gws CLI autenticado (para `/assessment-sync`)
+- Para `/assessment-create`: `xelatex`, `pygmentize`, `qpdf` — rode `python3 scripts/check_print_deps.py` para ver o plano de instalação por plataforma
+- Logo institucional em `skills/assessment-create/assets/if.jpeg` (IFRN Campus Pau dos Ferros)
 
 ## Comandos
 
 ```bash
-python3 -m pytest tests/test_compute_scores.py    # único suite executável do repo
+python3 -m pytest tests/                          # suite completa (21 testes)
+python3 scripts/check_print_deps.py               # verifica deps do /assessment-create
 ```
 
 ## Padrão de citação
@@ -66,9 +69,9 @@ ABNT NBR 6023 (padrão) | APA 7ª edição (configurável em `repo-manifest.md`)
 ```
 skills/             # 17 skills do pipeline (uma SKILL.md cada)
 agents/             # 7 subagents especializados
-templates/          # 17 templates de artefatos (.md/.html/.json)
-scripts/            # compute_scores.py (cálculo de notas)
-tests/              # pytest — test_compute_scores.py
+templates/          # 19 templates de artefatos (.md/.html/.json/.tex)
+scripts/            # compute_scores.py, render_assessment.py, validate_layout.py, check_print_deps.py
+tests/              # pytest — test_compute_scores.py, test_render_assessment.py + fixtures
 tools/OMRChecker/   # OMRChecker vendorizado
 docs/contracts/     # Contratos de qualidade por artefato
 docs/qa/            # Regras de QA consolidadas
