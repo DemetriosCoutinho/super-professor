@@ -20,6 +20,16 @@ Plugin para criação de aulas modernas e pedagogicamente rigorosas a partir de 
 | /assessment-grade | Corrige folhas fotografadas via OMRChecker + Claude Vision | photos/ preenchido |
 | /assessment-sync | Envia notas ao Google Classroom via gws CLI | scores.json + student-map.csv |
 
+## Subagents disponíveis
+
+- `citation-formatter` — ABNT/APA para referências
+- `corpus-reader` — leitura e indexação de materiais
+- `omr-processor` — invoca OMRChecker sobre fotos
+- `qa-validator` — valida artefatos contra contratos
+- `research-scout` — busca fontes externas
+- `skill-reviewer` — revisa qualidade de skills
+- `vision-grader` — fallback Claude Vision para OMR ambíguo
+
 ## Assessment pipeline (correção de provas impressas)
 
 ```
@@ -28,7 +38,15 @@ Plugin para criação de aulas modernas e pedagogicamente rigorosas a partir de 
 /assessment-sync     # envia notas ao Google Classroom
 ```
 
-Pré-requisitos externos: `pip install omrchecker` e gws CLI autenticado.
+Pré-requisitos externos:
+- OMRChecker vendorizado em `tools/OMRChecker/` (instalar dependências: `pip install -r tools/OMRChecker/requirements.txt`)
+- gws CLI autenticado (para `/assessment-sync`)
+
+## Comandos
+
+```bash
+python3 -m pytest tests/test_compute_scores.py    # único suite executável do repo
+```
 
 ## Padrão de citação
 ABNT NBR 6023 (padrão) | APA 7ª edição (configurável em `repo-manifest.md`)
@@ -42,10 +60,14 @@ ABNT NBR 6023 (padrão) | APA 7ª edição (configurável em `repo-manifest.md`)
 ## Estrutura do plugin
 
 ```
-skills/             # Skills do pipeline (formato marketplace)
-agents/             # Subagents especializados
-templates/          # Templates dos artefatos
+skills/             # 13 skills do pipeline (uma SKILL.md cada)
+agents/             # 7 subagents especializados
+templates/          # 14 templates de artefatos (.md/.html/.json)
+scripts/            # compute_scores.py (cálculo de notas)
+tests/              # pytest — test_compute_scores.py
+tools/OMRChecker/   # OMRChecker vendorizado
 docs/contracts/     # Contratos de qualidade por artefato
 docs/qa/            # Regras de QA consolidadas
-.claude-plugin/     # Manifesto do plugin e marketplace
+docs/superpowers/   # Notas internas de design
+.claude-plugin/     # plugin.json + marketplace.json
 ```
