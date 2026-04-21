@@ -25,8 +25,7 @@ question_count: 0
     d: DISTRACTOR_D
   rationale: |
     RATIONALE_TEXT
-  expected_answer:
-  
+
   # For discussive questions, remove options block and set:
   # type: discussive
   # expected_answer: |
