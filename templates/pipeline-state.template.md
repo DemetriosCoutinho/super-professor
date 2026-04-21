@@ -23,7 +23,9 @@ resume_from: null
 - lesson-corpus
 - lesson-research
 - lesson-plan
+- lesson-questions
 - lesson-blueprint
+- lesson-assessment (opcional, repetível)
 
 ## Último checkpoint
 

@@ -12,6 +12,8 @@ Plugin para criação de aulas modernas e pedagogicamente rigorosas a partir de 
 | /lesson-research | Pesquisa fontes externas | corpus-inventory.md |
 | /lesson-plan | Cria plano de aula | sources.md |
 | /lesson-blueprint | Gera blueprint de slides | lesson-plan.md |
+| /lesson-questions | Autora e gerencia banco de questões da aula | lesson-plan.md |
+| /lesson-assessment | Gera avaliação a partir do banco de questões | questions.md |
 | /lesson-qa | Valida qualquer artefato | artefato-alvo |
 | /super-professor | Pipeline completo com checkpoints | repo-manifest.md |
 
