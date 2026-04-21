@@ -15,6 +15,9 @@ Determine the artefact type from the filename:
 - `sources.md` → type: sources → rules: QC-U1–5, QC-S1–8
 - `lesson-plan.md` → type: plan → rules: QC-U1–5, QC-P1–7
 - `slides-blueprint.md` → type: blueprint → rules: QC-U1–5, QC-BL1–10
+- `questions.md` → type: questions → rules: QC-U1–5, QC-Q1–5
+- `assessment-A*.md` (not ending in `-key.md`) → type: assessment → rules: QC-U1–5, QC-A1–5
+- `assessment-A*-key.md` → type: assessment-key → rules: QC-U1–5, QC-A1–5
 
 Read `.super-professor/docs/qa/quality-contracts.md` to get the full rule definitions.
 
@@ -37,7 +40,7 @@ Collect all results.
 ## Step 3: Classify violations
 
 Classify each violated rule as:
-- **Crítico**: QC-U rules, QC-B1–3, QC-C1–2, QC-S1–4, QC-P1–3, QC-BL1–7 — pipeline CANNOT advance
+- **Crítico**: QC-U rules, QC-B1–3, QC-C1–2, QC-S1–4, QC-P1–3, QC-BL1–7, QC-Q1–3, QC-A1–4 — pipeline CANNOT advance
 - **Importante**: All other failing rules — pipeline CAN advance with explicit override
 
 ## Step 4: Present QA report
