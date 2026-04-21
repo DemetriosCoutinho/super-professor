@@ -59,11 +59,18 @@ After "sim":
 1. Create `.super-professor/` if it doesn't exist
 2. Create `.super-professor/templates/` if it doesn't exist
 3. Create `.super-professor/docs/qa/` if it doesn't exist
-4. Copy templates from `~/.claude/super-professor/templates/` to `.super-professor/templates/` (if source exists)
-5. Copy quality contracts from `~/.claude/super-professor/docs/qa/quality-contracts.md` to `.super-professor/docs/qa/quality-contracts.md` (if source exists)
+4. Locate the plugin source directory (run via Bash):
+   ```bash
+   PLUGIN_DIR=$(ls -dt ~/.claude/plugins/cache/super-professor-local/super-professor/*/  2>/dev/null | head -1)
+   [ -z "$PLUGIN_DIR" ] && PLUGIN_DIR=$(ls -dt ~/.claude/plugins/cache/*/super-professor/*/  2>/dev/null | head -1)
+   echo "$PLUGIN_DIR"
+   ```
+5. If `PLUGIN_DIR` is non-empty:
+   - Copy `$PLUGIN_DIR/templates/` → `.super-professor/templates/` (if source exists)
+   - Copy `$PLUGIN_DIR/docs/qa/quality-contracts.md` → `.super-professor/docs/qa/quality-contracts.md` (if source exists)
 6. Write `.super-professor/repo-manifest.md`
 
-If `~/.claude/super-professor/` does not exist: warn the professor that the plugin data directory is missing and that `/lesson-qa` will not have access to quality contracts. Suggest running the plugin install script.
+If no plugin source directory is found: note it in the manifest under `hypotheses` and continue — `/lesson-qa` will work using the checks embedded in each skill.
 
 ## GUARDRAILS (NEVER violate these)
 

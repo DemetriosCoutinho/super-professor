@@ -1,0 +1,22 @@
+{
+  "created_at": "",
+  "updated_at": "",
+  "slug": "",
+  "notebook_id": "",
+  "notebook_title": "",
+  "sources": [
+    {
+      "type": "text | pdf",
+      "path": "",
+      "added_at": ""
+    }
+  ],
+  "outputs": [
+    {
+      "type": "audio | study_guide | mind_map | briefing_doc | faq",
+      "file": "",
+      "generated_at": "",
+      "status": "pending | ready | error"
+    }
+  ]
+}

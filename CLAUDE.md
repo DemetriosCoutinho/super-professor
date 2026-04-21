@@ -19,6 +19,10 @@ Plugin para criação de aulas modernas e pedagogicamente rigorosas a partir de 
 | /assessment-create | Cria avaliação impressa (gabarito + folha de respostas HTML) | Nenhum |
 | /assessment-grade | Corrige folhas fotografadas via OMRChecker + Claude Vision | photos/ preenchido |
 | /assessment-sync | Envia notas ao Google Classroom via gws CLI | scores.json + student-map.csv |
+| /assessment-sync-check | Preflight dry-run do Classroom sync (sem postar notas) | scores.json + student-map.csv |
+| /lesson-images | Autora plano de mídia: corpus, Mermaid/HTML, raster (Gemini/DALL-E) | slides-blueprint.md |
+| /lesson-notebooklm | Cria notebook NotebookLM e gera áudio, study guide, mind map | lesson-plan.md + blueprint |
+| /lesson-classroom-publish | Publica atividades e materiais direto no Google Classroom | lesson-plan.md + blueprint |
 
 ## Subagents disponíveis
 
@@ -60,9 +64,9 @@ ABNT NBR 6023 (padrão) | APA 7ª edição (configurável em `repo-manifest.md`)
 ## Estrutura do plugin
 
 ```
-skills/             # 13 skills do pipeline (uma SKILL.md cada)
+skills/             # 17 skills do pipeline (uma SKILL.md cada)
 agents/             # 7 subagents especializados
-templates/          # 14 templates de artefatos (.md/.html/.json)
+templates/          # 17 templates de artefatos (.md/.html/.json)
 scripts/            # compute_scores.py (cálculo de notas)
 tests/              # pytest — test_compute_scores.py
 tools/OMRChecker/   # OMRChecker vendorizado

@@ -1,0 +1,20 @@
+{
+  "published_at": "",
+  "course_id": "",
+  "slug": "",
+  "items": [
+    {
+      "title": "",
+      "work_type": "ASSIGNMENT | MATERIAL | SHORT_ANSWER_QUESTION",
+      "description": "",
+      "max_points": null,
+      "due_date": null,
+      "materials": [],
+      "courseWorkId": "",
+      "link": "",
+      "status": "pending | published | error"
+    }
+  ],
+  "skipped": [],
+  "errors": []
+}
