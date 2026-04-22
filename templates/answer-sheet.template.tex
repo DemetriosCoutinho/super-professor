@@ -108,13 +108,13 @@ Nome: \hrulefill \quad Turma: \rule{3cm}{.1mm}
 
 \noindent
 \begin{tikzpicture}[
-    x=5.76mm,   % matches labelsGap = 68px @ 300dpi ≈ 5.76mm
-    y=-4.40mm,  % matches bubblesGap = 52px @ 300dpi ≈ 4.40mm (downward)
+    x=7.5mm,    % wider columns — more breathing room between D# labels and bubbles
+    y=-5.5mm,   % taller rows — separates digit rows and label from first bubble
     font=\scriptsize
   ]
   % Column labels D1..D14
   \foreach \col in {1,...,14} {
-    \node[font=\scriptsize\bfseries] at (\col-1, -0.6) {D\col};
+    \node[font=\scriptsize\bfseries] at (\col-1, -0.85) {D\col};
   }
   % Digit bubbles 0..9
   \foreach \col in {1,...,14} {
@@ -131,12 +131,6 @@ Nome: \hrulefill \quad Turma: \rule{3cm}{.1mm}
 
 % -----------------------------------------------------------------------
 % QUESTION BUBBLE GRID — 2 columns, Q1–Q10 left, Q11–Q20 right
-% Calibrated to match omr-template.json QLeft / QRight blocks:
-%   QLeft  origin [160, 1050]  → same left margin as StudentID
-%   QRight origin [1340, 1050] → 1340px from left ≈ 113.4mm from page left
-%                                with 10mm margin → ~103.4mm from text left
-%   labelsGap = 78px ≈ 6.60mm (row height, vertical direction)
-%   bubblesGap = 62px ≈ 5.25mm (bubble center-to-center horizontally)
 % -----------------------------------------------------------------------
 \noindent{\bfseries\small Respostas — preencha completamente o c\'{\i}rculo:}
 
@@ -146,16 +140,16 @@ Nome: \hrulefill \quad Turma: \rule{3cm}{.1mm}
 \begin{minipage}[t]{0.48\textwidth}
   % Q1–Q10
   \begin{tikzpicture}[
-      x=5.25mm,   % bubblesGap = 62px ≈ 5.25mm
-      y=-6.60mm,  % labelsGap = 78px ≈ 6.60mm (downward)
+      x=7.0mm,    % wider gap between A–D bubbles (~2mm clearance)
+      y=-8.0mm,   % taller rows — comfortable vertical spacing between questions
       font=\scriptsize
     ]
     % Header labels
-    \node[font=\scriptsize\bfseries] at (0,    -0.5) {Q};
-    \node[font=\scriptsize\bfseries] at (1,    -0.5) {A};
-    \node[font=\scriptsize\bfseries] at (2,    -0.5) {B};
-    \node[font=\scriptsize\bfseries] at (3,    -0.5) {C};
-    \node[font=\scriptsize\bfseries] at (4,    -0.5) {D};
+    \node[font=\scriptsize\bfseries] at (0,    -0.7) {Q};
+    \node[font=\scriptsize\bfseries] at (1,    -0.7) {A};
+    \node[font=\scriptsize\bfseries] at (2,    -0.7) {B};
+    \node[font=\scriptsize\bfseries] at (3,    -0.7) {C};
+    \node[font=\scriptsize\bfseries] at (4,    -0.7) {D};
     % Questions 1–10
     \foreach \q in {1,...,10} {
       \pgfmathsetmacro{\row}{\q - 1}
@@ -170,16 +164,16 @@ Nome: \hrulefill \quad Turma: \rule{3cm}{.1mm}
 \begin{minipage}[t]{0.48\textwidth}
   % Q11–Q20
   \begin{tikzpicture}[
-      x=5.25mm,
-      y=-6.60mm,
+      x=7.0mm,
+      y=-8.0mm,
       font=\scriptsize
     ]
     % Header labels
-    \node[font=\scriptsize\bfseries] at (0,    -0.5) {Q};
-    \node[font=\scriptsize\bfseries] at (1,    -0.5) {A};
-    \node[font=\scriptsize\bfseries] at (2,    -0.5) {B};
-    \node[font=\scriptsize\bfseries] at (3,    -0.5) {C};
-    \node[font=\scriptsize\bfseries] at (4,    -0.5) {D};
+    \node[font=\scriptsize\bfseries] at (0,    -0.7) {Q};
+    \node[font=\scriptsize\bfseries] at (1,    -0.7) {A};
+    \node[font=\scriptsize\bfseries] at (2,    -0.7) {B};
+    \node[font=\scriptsize\bfseries] at (3,    -0.7) {C};
+    \node[font=\scriptsize\bfseries] at (4,    -0.7) {D};
     % Questions 11–20
     \foreach \q in {11,...,20} {
       \pgfmathsetmacro{\row}{\q - 11}

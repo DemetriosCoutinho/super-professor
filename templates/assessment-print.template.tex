@@ -1,7 +1,7 @@
 \documentclass[a4paper,10pt]{article}
-\usepackage[utf8]{inputenc}
-\usepackage[T1]{fontenc}
-\usepackage[brazil]{babel}
+\usepackage{fontspec}
+\usepackage{polyglossia}
+\setmainlanguage{brazil}
 \usepackage[margin=1.4cm]{geometry}
 \setlength{\columnsep}{0.7cm}
 \usepackage{multicol}
@@ -10,7 +10,7 @@
 \usepackage{enumitem}
 \usepackage{titlesec}
 \usepackage{tikz}
-\usepackage{tikz-uml}
+\IfFileExists{tikz-uml.sty}{\usepackage{tikz-uml}}{}
 \usepackage{adjustbox}
 \usepackage{minted}
 \setminted{fontsize=\scriptsize, breaklines=true, autogobble=true, frame=single, framesep=2mm, tabsize=4}

@@ -12,6 +12,7 @@
 - [ ] Testar `/lesson-classroom-publish --preview` (dry-run) e depois publicação real em curso sandbox
 - [ ] Conectar `/lesson-notebooklm` ao pipeline `/super-professor` (adicionar checkpoint após blueprint)
 - [ ] Adicionar campo `image_provider` ao template `repo-manifest.md`
+- [ ] Adicionar ao `CLAUDE.md` instrução de rodar `claude-md-management:revise-claude-md` após cada planejamento para avaliar mudanças e sugerir ao usuário antes de implementar
 
 ## Later (backlog priorizado)
 

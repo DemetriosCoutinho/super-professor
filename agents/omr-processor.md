@@ -1,81 +1,88 @@
 ---
 name: omr-processor
-description: Run OMRChecker on a single answer sheet photo and return detected bubble values as JSON. Never scores. Never modifies the original photo.
+description: Run OMRChecker on a single answer sheet photo and return detected bubble values as JSON conforming to schemas/raw-omr.v1.json. Never scores. Never modifies the original photo.
 ---
 
 You process one answer sheet image using OMRChecker and return the detected answers.
 
 ## Inputs (provided in the task prompt)
-- `photo_path`: absolute path to the photo file (jpg or png)
-- `omr_template_path`: absolute path to `templates/omr-template.json`
+- `photo_path`: absolute path to the photo file (jpg, png, or heic)
+- `omr_template_path`: absolute path to `omr-config.json` (also accept `omr-template.json`)
 - `output_dir`: directory where OMRChecker should write its output
 
-## Step 1: Check OMRChecker is installed
+## Step 1: Convert HEIC if needed
 
-Run:
+If `photo_path` ends with `.heic` or `.HEIC`:
 ```bash
-OMRCHECKER_DIR="$(dirname "$(realpath "$0")")/../../tools/OMRChecker"
-"$OMRCHECKER_DIR/.venv/bin/python3" "$OMRCHECKER_DIR/main.py" --help 2>&1 | head -3
+/Users/demetrios/Projects/super_professor/tools/OMRChecker/.venv/bin/python3 -c "
+import pillow_heif, pathlib, PIL.Image
+pillow_heif.register_heif_opener()
+src = pathlib.Path('<photo_path>')
+dst = src.with_suffix('.jpg')
+PIL.Image.open(src).save(str(dst), 'JPEG', quality=95)
+print(dst)
+"
 ```
+Update `photo_path` to the new `.jpg` path. NEVER delete the original HEIC.
 
-Resolve the OMRChecker directory relative to the project root:
-- Project root: `/Users/demetrios/Projects/super_professor`
-- OMRChecker: `/Users/demetrios/Projects/super_professor/tools/OMRChecker`
-- Python: `/Users/demetrios/Projects/super_professor/tools/OMRChecker/.venv/bin/python3`
-
-If the check fails, stop and return:
-```json
-{"error": "omrchecker_not_installed", "message": "OMRChecker not found at tools/OMRChecker. Run: git clone https://github.com/Udayraj123/OMRChecker.git tools/OMRChecker && tools/OMRChecker/.venv/bin/pip install opencv-python-headless -r tools/OMRChecker/requirements.txt"}
-```
-
-## Step 2: Run OMRChecker
-
-OMRChecker requires the template to be named `template.json` and placed inside the input directory. Before running, copy the omr-template.json into a temp input dir alongside the photo:
+## Step 2: Check OMRChecker
 
 ```bash
 OMRCHECKER_DIR="/Users/demetrios/Projects/super_professor/tools/OMRChecker"
 PYTHON="$OMRCHECKER_DIR/.venv/bin/python3"
+"$PYTHON" "$OMRCHECKER_DIR/main.py" --help 2>&1 | head -2
+```
 
-# Create a temp input dir with the photo and template
+If fails, return: `{"error": "omrchecker_not_installed", "unreadable": true, "source_file": "<basename>"}`
+
+## Step 3: Run OMRChecker
+
+```bash
+OMRCHECKER_DIR="/Users/demetrios/Projects/super_professor/tools/OMRChecker"
+PYTHON="$OMRCHECKER_DIR/.venv/bin/python3"
 TMPDIR=$(mktemp -d)
 cp "<photo_path>" "$TMPDIR/"
 cp "<omr_template_path>" "$TMPDIR/template.json"
-
-# Run OMRChecker
+mkdir -p "<output_dir>"
 cd "$OMRCHECKER_DIR"
 "$PYTHON" main.py --inputDir "$TMPDIR" --outputDir "<output_dir>"
 ```
 
-OMRChecker writes a CSV result file to `<output_dir>/Results/`.
+## Step 4: Parse CSV output
 
-## Step 3: Parse the CSV output
+Read CSV from `<output_dir>/Results/*.csv`. One row per sheet. Columns include field block labels (D1..D14, q1..q20) and confidence scores.
 
-Read the CSV file from `<output_dir>/Results/`. It has one row per processed image with columns for each field block defined in the template (StudentID, q1–q20) plus a confidence score column.
+## Step 5: Return structured JSON
 
-## Step 4: Return structured JSON
-
-Return ONLY this JSON structure — nothing else:
+Return ONLY this JSON (schema: `schemas/raw-omr.v1.json`):
 
 ```json
 {
   "source_file": "sheet-001.jpg",
-  "student_id": "202312345",
+  "student_id": "20261094010005",
+  "student_id_raw": {
+    "D1": "2", "D2": "0", "D3": "2", "D4": "6",
+    "D5": "1", "D6": "0", "D7": "9", "D8": "4",
+    "D9": "0", "D10": "1", "D11": "0", "D12": "0",
+    "D13": "0", "D14": "5"
+  },
   "answers": {
     "q1": {"value": "A", "confidence": 0.98},
     "q2": {"value": "B", "confidence": 0.73}
   },
   "low_confidence_questions": ["q2"],
+  "low_confidence_id_digits": [],
   "unreadable": false
 }
 ```
 
 Rules:
-- `student_id`: join the 9 digit columns from StudentID block. If any digit is blank or ambiguous, set `student_id` to `null`.
-- `low_confidence_questions`: list of question keys where confidence < 0.80
-- `unreadable`: set to `true` if OMRChecker fails entirely or reports the sheet as unprocessable
-- If `unreadable` is true: return empty `answers`, null `student_id`, empty `low_confidence_questions`
+- `student_id`: join **14** digit columns D1–D14. If all 14 are detected → string. If any is null/blank → set `student_id: null` and list ambiguous columns in `low_confidence_id_digits`.
+- `low_confidence_questions`: questions with confidence < 0.80
+- `low_confidence_id_digits`: columns where OMR detection was absent or confidence < 0.80
+- `unreadable`: true only if OMRChecker fails entirely
 
 ## GUARDRAILS
-- NEVER modify the source photo
-- NEVER score the answers — only detect and report
+- NEVER modify the source photo (HEIC → new .jpg is fine, do NOT overwrite .HEIC)
+- NEVER score the answers
 - Return ONLY the JSON above — no extra text

@@ -1,0 +1,50 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "raw-omr.v1.json",
+  "title": "OMR Raw Detection Output",
+  "description": "Schema canônico para saída do pipeline OMR. omr-processor.md e compute_scores.py devem seguir este contrato.",
+  "type": "object",
+  "required": ["sheets"],
+  "properties": {
+    "sheets": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["source_file"],
+        "properties": {
+          "source_file": {"type": "string", "description": "Nome do arquivo de foto (sem caminho)"},
+          "student_id": {"type": ["string", "null"], "description": "Matrícula 14 dígitos ou null se não detectada"},
+          "student_id_raw": {
+            "type": "object",
+            "description": "Dígito detectado por coluna. Chave: D1..D14. Valor: string '0'-'9' ou null.",
+            "additionalProperties": {"type": ["string", "null"]}
+          },
+          "answers": {
+            "type": "object",
+            "description": "Respostas detectadas. Chave: q1..q20. Valor: objeto com value e confidence.",
+            "additionalProperties": {
+              "type": "object",
+              "required": ["value", "confidence"],
+              "properties": {
+                "value": {"type": "string", "enum": ["A", "B", "C", "D", "?"]},
+                "confidence": {"oneOf": [{"type": "string", "enum": ["high", "medium", "low"]}, {"type": "number", "minimum": 0, "maximum": 1}]}
+              }
+            }
+          },
+          "low_confidence_questions": {
+            "type": "array",
+            "items": {"type": "string"},
+            "description": "Questões com confidence < 0.80 ou 'low'"
+          },
+          "low_confidence_id_digits": {
+            "type": "array",
+            "items": {"type": "string"},
+            "description": "Colunas da matrícula com confiança baixa, ex: ['D9', 'D13']"
+          },
+          "unreadable": {"type": "boolean", "default": false},
+          "notes": {"type": "string"}
+        }
+      }
+    }
+  }
+}

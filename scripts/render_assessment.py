@@ -49,6 +49,7 @@ DEFAULT_INSTRUCTIONS = (
 # Step 0 — Dependency check
 # ---------------------------------------------------------------------------
 
+
 def check_dependencies(dry_run: bool = False) -> None:
     """Check for required external tools. Exit 1 if any required dep is missing."""
     try:
@@ -63,7 +64,9 @@ def check_dependencies(dry_run: bool = False) -> None:
         print("[ERROR] Missing required dependencies:", ", ".join(result["missing"]))
         print("Run `python3 scripts/check_print_deps.py` to see install instructions")
         platform = result["platform"]
-        plan = result["install_plan"].get(platform, result["install_plan"].get("debian", ""))
+        plan = result["install_plan"].get(
+            platform, result["install_plan"].get("debian", "")
+        )
         if plan:
             print(f"Install plan ({platform}):\n  {plan}")
         sys.exit(1)
@@ -91,6 +94,7 @@ def check_dependencies(dry_run: bool = False) -> None:
 # Step 1 — Parse inputs
 # ---------------------------------------------------------------------------
 
+
 def parse_yaml_frontmatter(text: str) -> tuple[dict, str]:
     """
     Extract YAML frontmatter (between --- delimiters) from markdown text.
@@ -106,7 +110,7 @@ def parse_yaml_frontmatter(text: str) -> tuple[dict, str]:
             fm = yaml.safe_load(match.group(1)) or {}
         except Exception:
             fm = {}
-        body = text[match.end():]
+        body = text[match.end() :]
     else:
         fm = {}
         body = text
@@ -208,11 +212,13 @@ def parse_questions_from_body(body: str) -> list[dict]:
             stem = block.strip()
             alternatives = []
 
-        questions.append({
-            "num": q_num,
-            "stem": stem,
-            "alternatives": alternatives,
-        })
+        questions.append(
+            {
+                "num": q_num,
+                "stem": stem,
+                "alternatives": alternatives,
+            }
+        )
 
     return questions
 
@@ -282,9 +288,13 @@ def md_inline_to_latex(text: str) -> str:
     # Bold **text**
     text = re.sub(r"\*\*(.+?)\*\*", lambda m: r"\textbf{" + m.group(1) + "}", text)
     # Italic *text* (not **text**)
-    text = re.sub(r"(?<!\*)\*(?!\*)(.+?)(?<!\*)\*(?!\*)", lambda m: r"\textit{" + m.group(1) + "}", text)
+    text = re.sub(
+        r"(?<!\*)\*(?!\*)(.+?)(?<!\*)\*(?!\*)",
+        lambda m: r"\textit{" + m.group(1) + "}",
+        text,
+    )
     # Inline code `code`
-    text = re.sub(r"`([^`]+)`", lambda m: r"\texttt{" + escape_latex(m.group(1)) + "}", text)
+    text = re.sub(r"`([^`]+)`", lambda m: r"\texttt{" + m.group(1) + "}", text)
     return text
 
 
@@ -294,6 +304,7 @@ def convert_code_blocks(text: str) -> str:
     ```python ... ``` → \\begin{minted}{python}...\\end{minted}
     ```uml ... ```   → \\umlpic{ ... }
     """
+
     def replace_block(match: re.Match) -> str:
         lang = match.group(1).strip().lower()
         content = match.group(2)
@@ -312,7 +323,9 @@ def markdown_to_latex(text: str) -> str:
     # Handle code blocks first (before escaping)
     text = convert_code_blocks(text)
     # Split on minted/umlpic environments to avoid escaping their content
-    parts = re.split(r"(\\begin\{minted\}.*?\\end\{minted\}|\\umlpic\{.*?\})", text, flags=re.DOTALL)
+    parts = re.split(
+        r"(\\begin\{minted\}.*?\\end\{minted\}|\\umlpic\{.*?\})", text, flags=re.DOTALL
+    )
     result_parts = []
     for i, part in enumerate(parts):
         if i % 2 == 0:
@@ -342,16 +355,13 @@ def render_question_latex(q: dict) -> str:
             f"\\end{{questao}}\n"
         )
     else:
-        return (
-            f"\\begin{{questao}}{{{num}}}\n"
-            f"{stem}\n"
-            f"\\end{{questao}}\n"
-        )
+        return f"\\begin{{questao}}{{{num}}}\n{stem}\n\\end{{questao}}\n"
 
 
 # ---------------------------------------------------------------------------
 # Step 2 — Fill templates
 # ---------------------------------------------------------------------------
+
 
 def fill_prova_template(
     template_text: str,
@@ -366,14 +376,23 @@ def fill_prova_template(
     questions_latex: str,
 ) -> str:
     """Fill assessment-print.template.tex placeholders."""
+
+    def meta(s: str) -> str:
+        return (
+            s.replace("_", r"\_")
+            .replace("&", r"\&")
+            .replace("%", r"\%")
+            .replace("#", r"\#")
+        )
+
     replacements = {
-        "{{COURSE_SHORT}}": course_short,
-        "{{EXAM_KIND}}": exam_kind,
+        "{{COURSE_SHORT}}": meta(course_short),
+        "{{EXAM_KIND}}": meta(exam_kind),
         "{{LOGO_PATH}}": logo_path,
-        "{{DISCIPLINE}}": discipline,
-        "{{TEACHER}}": teacher,
-        "{{DATE}}": date,
-        "{{TOTAL_POINTS}}": total_points,
+        "{{DISCIPLINE}}": meta(discipline),
+        "{{TEACHER}}": meta(teacher),
+        "{{DATE}}": meta(date),
+        "{{TOTAL_POINTS}}": meta(total_points),
         "{{INSTRUCTIONS}}": instructions,
         "{{QUESTIONS}}": questions_latex,
     }
@@ -391,11 +410,20 @@ def fill_answer_sheet_tex_template(
     course_short: str,
 ) -> str:
     """Fill answer-sheet.template.tex placeholders."""
+
+    def meta(s: str) -> str:
+        return (
+            s.replace("_", r"\_")
+            .replace("&", r"\&")
+            .replace("%", r"\%")
+            .replace("#", r"\#")
+        )
+
     replacements = {
         "{{LOGO_PATH}}": logo_path,
-        "{{TITLE}}": title,
-        "{{DATE}}": date,
-        "{{COURSE_SHORT}}": course_short,
+        "{{TITLE}}": meta(title),
+        "{{DATE}}": meta(date),
+        "{{COURSE_SHORT}}": meta(course_short),
     }
     result = template_text
     for placeholder, value in replacements.items():
@@ -411,7 +439,7 @@ def generate_question_html(q_range: range) -> str:
         for letter in ["A", "B", "C", "D"]:
             options_html += (
                 f'<div class="option">'
-                f'<span>{letter}</span>'
+                f"<span>{letter}</span>"
                 f'<div class="opt-bubble"></div>'
                 f"</div>"
             )
@@ -450,6 +478,7 @@ def fill_answer_sheet_html_template(
 # Step 3 — Build PDFs
 # ---------------------------------------------------------------------------
 
+
 def run_xelatex(tex_file: Path, build_dir: Path) -> Path:
     """
     Run xelatex twice on tex_file in build_dir.
@@ -467,12 +496,21 @@ def run_xelatex(tex_file: Path, build_dir: Path) -> Path:
             tex_file.name,
         ]
         try:
+            env = os.environ.copy()
+            env["TEXMF_OUTPUT_DIRECTORY"] = str(build_dir)
+            # Ensure latexminted wrapper (python3.13 compatible) comes before TeX bin
+            user_bin = str(Path.home() / "bin")
+            tex_bin = str(Path(shutil.which("xelatex")).parent)
+            env["PATH"] = (
+                user_bin + os.pathsep + tex_bin + os.pathsep + env.get("PATH", "")
+            )
             proc = subprocess.run(
                 cmd,
                 cwd=str(build_dir),
                 capture_output=True,
                 text=True,
                 timeout=120,
+                env=env,
             )
         except FileNotFoundError:
             raise RuntimeError(
@@ -480,7 +518,9 @@ def run_xelatex(tex_file: Path, build_dir: Path) -> Path:
                 "Run `python3 scripts/check_print_deps.py` to see install instructions."
             )
         except subprocess.TimeoutExpired:
-            raise RuntimeError(f"xelatex timed out on pass {pass_num} for {tex_file.name}")
+            raise RuntimeError(
+                f"xelatex timed out on pass {pass_num} for {tex_file.name}"
+            )
 
         if proc.returncode != 0:
             # Try to extract the error from log or stdout
@@ -532,6 +572,7 @@ def check_log_for_errors(log_path: Path) -> list[str]:
 # Step 4 — Merge PDFs
 # ---------------------------------------------------------------------------
 
+
 def merge_pdfs(build_dir: Path) -> Path:
     """Merge prova.pdf and answer-sheet.pdf into assessment-duplex.pdf."""
     prova_pdf = build_dir / "prova.pdf"
@@ -547,22 +588,23 @@ def merge_pdfs(build_dir: Path) -> Path:
         "qpdf",
         "--empty",
         "--pages",
-        str(prova_pdf), "1-z",
-        str(answer_pdf), "1-z",
+        str(prova_pdf),
+        "1-z",
+        str(answer_pdf),
+        "1-z",
         "--",
         str(duplex_pdf),
     ]
     proc = subprocess.run(cmd, capture_output=True, text=True, timeout=60)
     if proc.returncode != 0:
-        raise RuntimeError(
-            f"qpdf failed (rc={proc.returncode}): {proc.stderr}"
-        )
+        raise RuntimeError(f"qpdf failed (rc={proc.returncode}): {proc.stderr}")
     return duplex_pdf
 
 
 # ---------------------------------------------------------------------------
 # Step 5 — HTML preview
 # ---------------------------------------------------------------------------
+
 
 def logo_to_data_uri(logo_path: Path) -> str:
     """Encode logo as base64 data-URI if it exists, else return empty string."""
@@ -579,6 +621,7 @@ def logo_to_data_uri(logo_path: Path) -> str:
 # Step 6 — Copy outputs
 # ---------------------------------------------------------------------------
 
+
 def copy_outputs(build_dir: Path, out_dir: Path, artifacts: list[str]) -> None:
     """Copy named artifacts from build_dir to out_dir, concatenating .log files."""
     out_dir.mkdir(parents=True, exist_ok=True)
@@ -591,7 +634,9 @@ def copy_outputs(build_dir: Path, out_dir: Path, artifacts: list[str]) -> None:
             continue
         dst = out_dir / name
         if src.suffix == ".log":
-            log_content_parts.append(f"=== {name} ===\n" + src.read_text(encoding="utf-8", errors="replace"))
+            log_content_parts.append(
+                f"=== {name} ===\n" + src.read_text(encoding="utf-8", errors="replace")
+            )
         else:
             shutil.copy2(str(src), str(dst))
 
@@ -605,6 +650,7 @@ def copy_outputs(build_dir: Path, out_dir: Path, artifacts: list[str]) -> None:
 # ---------------------------------------------------------------------------
 # Main orchestrator
 # ---------------------------------------------------------------------------
+
 
 def resolve_paths(args: argparse.Namespace) -> tuple[Path, Path, Path, str]:
     """
@@ -634,11 +680,22 @@ def main() -> None:  # noqa: C901, PLR0912, PLR0915
         description="Render assessment PDFs from assessment.md + assessment-key.md"
     )
     group = parser.add_mutually_exclusive_group()
-    group.add_argument("--lesson", metavar="SLUG", help="Lesson slug (reads from aulas/<slug>/)")
-    group.add_argument("--from", dest="from_path", metavar="PATH", help="Explicit path to assessment.md")
+    group.add_argument(
+        "--lesson", metavar="SLUG", help="Lesson slug (reads from aulas/<slug>/)"
+    )
+    group.add_argument(
+        "--from",
+        dest="from_path",
+        metavar="PATH",
+        help="Explicit path to assessment.md",
+    )
     parser.add_argument("--out", metavar="DIR", help="Output directory")
-    parser.add_argument("--allow-whitespace", action="store_true", help="Skip fill-rate check")
-    parser.add_argument("--dry-run", action="store_true", help="Check deps and parse inputs only")
+    parser.add_argument(
+        "--allow-whitespace", action="store_true", help="Skip fill-rate check"
+    )
+    parser.add_argument(
+        "--dry-run", action="store_true", help="Check deps and parse inputs only"
+    )
     args = parser.parse_args()
 
     if not args.lesson and not args.from_path:
@@ -690,9 +747,7 @@ def main() -> None:  # noqa: C901, PLR0912, PLR0915
         or "___/___/______"
     )
     class_name = (
-        assessment_fm.get("class_name")
-        or extract_field(assessment_body, "Turma")
-        or ""
+        assessment_fm.get("class_name") or extract_field(assessment_body, "Turma") or ""
     )
 
     # Extract answers from key
@@ -718,9 +773,8 @@ def main() -> None:  # noqa: C901, PLR0912, PLR0915
     total_points = str(100)  # Fixed at 100 per spec
 
     # Instructions
-    instructions = (
-        assessment_fm.get("instructions")
-        or briefing_info.get("instructions", DEFAULT_INSTRUCTIONS)
+    instructions = assessment_fm.get("instructions") or briefing_info.get(
+        "instructions", DEFAULT_INSTRUCTIONS
     )
 
     if args.dry_run:
