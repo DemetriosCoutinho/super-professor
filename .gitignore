@@ -6,3 +6,5 @@ node_modules/
 aulas/
 .super-professor/
 tools/OMRChecker/
+__pycache__/
+*.pyc
